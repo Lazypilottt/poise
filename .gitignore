@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# Django
+db.sqlite3
+media/
+staticfiles/
+
+# Local recordings / scratch data (never commit personal audio/video)
+*.wav
+*.webm
+*.mp4
+*.TextGrid
+dataset/videofile/
+Fig-1.jpg
+
+# Notebooks with experiments
+*.ipynb
+.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
