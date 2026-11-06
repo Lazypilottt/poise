@@ -1,0 +1,13 @@
+.git
+.venv
+venv
+__pycache__
+*.pyc
+.env
+db.sqlite3
+media
+staticfiles
+dataset
+*.ipynb
+*.jpg
+!static/**/*.jpg
