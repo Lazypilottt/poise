@@ -1,0 +1,61 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Poise - practise interviews on camera and get instant feedback on your speech and body language." />
+    <title>{% block title %}Poise{% endblock %} · Poise</title>
+    <link rel="icon" type="image/svg+xml" href="{% static 'img/logo.svg' %}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'css/app.css' %}" />
+    {% block head %}{% endblock %}
+  </head>
+  <body>
+    <header class="nav">
+      <div class="container nav__inner">
+        <a class="brand" href="{% url 'home' %}">
+          <img src="{% static 'img/logo.svg' %}" alt="" width="28" height="28" />
+          <span>Poise</span>
+        </a>
+        <input type="checkbox" id="nav-toggle" class="nav__toggle" aria-label="Toggle menu" />
+        <label for="nav-toggle" class="nav__burger" aria-hidden="true"><span></span></label>
+        <nav class="nav__links">
+          {% if user.is_authenticated %}
+            <a href="{% url 'setup' %}" class="{% if request.resolver_match.url_name == 'setup' or request.resolver_match.url_name == 'interview' %}active{% endif %}">Practice</a>
+            <a href="{% url 'history' %}" class="{% if request.resolver_match.url_name == 'history' or request.resolver_match.url_name == 'result' %}active{% endif %}">My sessions</a>
+            <a href="{% url 'account' %}" class="{% if request.resolver_match.url_name == 'account' %}active{% endif %}">Account</a>
+            <a href="{% url 'contact' %}" class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}">Contact</a>
+            <form method="post" action="{% url 'logout' %}" class="inline">
+              {% csrf_token %}
+              <button type="submit" class="btn btn--ghost btn--sm">Log out</button>
+            </form>
+          {% else %}
+            <a href="{% url 'contact' %}">Contact</a>
+            <a href="{% url 'login' %}">Log in</a>
+            <a href="{% url 'signup' %}" class="btn btn--primary btn--sm">Get started</a>
+          {% endif %}
+        </nav>
+      </div>
+    </header>
+
+    {% if messages %}
+      <div class="container messages">
+        {% for message in messages %}
+          <div class="alert alert--{{ message.tags|default:'info' }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <main>{% block content %}{% endblock %}</main>
+
+    <footer class="footer">
+      <div class="container footer__inner">
+        <span>Poise · Interview practice with instant feedback</span>
+        <span class="muted">Recordings are analysed and deleted - only your scores are kept.</span>
+      </div>
+    </footer>
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

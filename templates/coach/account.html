@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Account{% endblock %}
+{% block content %}
+<section class="section section--tight">
+  <div class="container narrow">
+    <h1>Account</h1>
+    <div class="card">
+      <table class="table">
+        <tbody>
+          <tr><th>Username</th><td>{{ user.username }}</td></tr>
+          <tr><th>Email</th><td>{{ user.email|default:"-" }}</td></tr>
+          <tr><th>Member since</th><td>{{ user.date_joined|date:"j M Y" }}</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Change password</h3>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {% for field in form %}{% include "includes/field.html" %}{% endfor %}
+        <button type="submit" class="btn btn--primary">Update password</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

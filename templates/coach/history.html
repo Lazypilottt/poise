@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}My sessions{% endblock %}
+{% block content %}
+<section class="section section--tight">
+  <div class="container">
+    <div class="page-head">
+      <div>
+        <h1>My sessions</h1>
+        <p class="muted">Track how your interview performance changes over time.</p>
+      </div>
+      <a href="{% url 'setup' %}" class="btn btn--primary">New session</a>
+    </div>
+
+    {% if sessions %}
+      <div class="stats">
+        <div class="card stat"><span class="muted small">Completed</span><b>{{ completed_count }}</b></div>
+        <div class="card stat"><span class="muted small">Average score</span><b>{{ average_score|default:"-" }}</b></div>
+        <div class="card stat"><span class="muted small">Best score</span><b>{{ best_score|default:"-" }}</b></div>
+      </div>
+
+      {% if trend_points %}
+        <div class="card">
+          <h3>Score trend</h3>
+          <svg class="trend" viewBox="0 0 600 160" role="img" aria-label="Overall score over time">
+            <line x1="24" y1="24" x2="576" y2="24" class="trend__grid" />
+            <line x1="24" y1="80" x2="576" y2="80" class="trend__grid" />
+            <line x1="24" y1="136" x2="576" y2="136" class="trend__grid" />
+            <polyline points="{% for p in trend_points %}{{ p.x }},{{ p.y }} {% endfor %}" class="trend__line" />
+            {% for p in trend_points %}
+              <circle cx="{{ p.x }}" cy="{{ p.y }}" r="5" class="trend__dot" />
+              <text x="{{ p.x }}" y="{{ p.label_y }}" class="trend__label">{{ p.score }}</text>
+            {% endfor %}
+          </svg>
+          <div class="trend__axis muted small"><span>Oldest</span><span>Latest</span></div>
+        </div>
+      {% endif %}
+
+      <div class="card table-wrap">
+        <table class="table table--list">
+          <thead><tr><th>Date</th><th>Role</th><th>Status</th><th>Score</th><th></th></tr></thead>
+          <tbody>
+            {% for s in sessions %}
+              <tr>
+                <td>{{ s.created_at|date:"j M Y, H:i" }}</td>
+                <td>{{ s.get_role_display }}</td>
+                <td><span class="pill pill--{{ s.status }}">{{ s.get_status_display }}</span></td>
+                <td>{% if s.overall_score is not None %}<b>{{ s.overall_score }}</b>{% else %}-{% endif %}</td>
+                <td class="row-actions">
+                  <a href="{{ s.get_absolute_url }}" class="btn btn--ghost btn--sm">View</a>
+                  <form method="post" action="{% url 'delete_session' s.pk %}" class="inline" onsubmit="return confirm('Delete this session?');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn--link btn--sm">Delete</button>
+                  </form>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="card empty">
+        <h3>No sessions yet</h3>
+        <p class="muted">Record your first mock interview to get a report.</p>
+        <a href="{% url 'setup' %}" class="btn btn--primary">Start practising</a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

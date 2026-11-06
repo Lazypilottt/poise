@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}Results{% endblock %}
+{% block content %}
+<section class="section section--tight">
+  <div class="container">
+    <div class="page-head">
+      <div>
+        <a href="{% url 'history' %}" class="small">&larr; All sessions</a>
+        <h1>Interview report</h1>
+        <p class="muted">{{ session.get_role_display }} · {{ session.created_at|date:"j M Y, H:i" }}{% if session.duration_seconds %} · {{ session.duration_seconds|floatformat:0 }}s recorded{% endif %}</p>
+      </div>
+      <a href="{% url 'setup' %}" class="btn btn--primary">Practise again</a>
+    </div>
+
+    {% if session.status == "failed" %}
+      <div class="card">
+        <h3>We couldn't analyse this recording</h3>
+        <p class="muted">{{ session.error }}</p>
+        <a href="{% url 'interview' %}" class="btn btn--primary">Try again</a>
+      </div>
+    {% else %}
+      {% with report=session.report speech=session.speech_metrics posture=session.posture_metrics %}
+      <div class="result-grid">
+        <div class="card score-card">
+          <div class="ring ring--lg" style="--value: {{ session.overall_score }}"><span>{{ session.overall_score }}</span></div>
+          <div class="score-card__grade">{{ report.grade }}</div>
+          {% if score_change is not None %}
+            <div class="delta {% if score_change > 0 %}delta--up{% elif score_change < 0 %}delta--down{% endif %}">
+              {% if score_change > 0 %}+{% endif %}{{ score_change }} vs. previous session
+            </div>
+          {% endif %}
+          <div class="bars">
+            {% for label, value in session.category_scores %}
+              <div class="bar">
+                <span>{{ label }}</span>
+                <div class="bar__track"><div class="bar__fill{% if value < 50 %} bar__fill--bad{% elif value < 70 %} bar__fill--warn{% endif %}" style="width: {{ value }}%"></div></div>
+                <b>{{ value }}</b>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Feedback</h3>
+          <ul class="tip-list">
+            {% for tip in report.tips %}
+              <li class="tip {% if tip.positive %}tip--good{% else %}tip--improve{% endif %}">{{ tip.message }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        {% if session.snapshot %}
+          <div class="card">
+            <h3>Posture snapshot</h3>
+            <img class="snapshot" src="{% url 'snapshot' session.pk %}" alt="Annotated frame showing detected shoulders, ears and nose" />
+            {% if posture.frames_analysed %}
+              <p class="muted small">Good posture in {% widthratio posture.good_ratio 1 100 %}% of {{ posture.frames_analysed }} sampled frames.</p>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        <div class="card">
+          <h3>Speech details</h3>
+          <table class="table">
+            <tbody>
+              <tr><th>Speaking rate</th><td>{{ speech.speech_rate }} syllables/s</td></tr>
+              <tr><th>Articulation rate</th><td>{{ speech.articulation_rate }} syllables/s</td></tr>
+              <tr><th>Pauses</th><td>{{ speech.pauses }} ({{ speech.pauses_per_minute|floatformat:1 }}/min)</td></tr>
+              <tr><th>Speaking time</th><td>{{ speech.speaking_duration }}s of {{ speech.total_duration }}s</td></tr>
+              <tr><th>Average pitch</th><td>{{ speech.f0_mean|floatformat:0 }} Hz (±{{ speech.f0_std|floatformat:0 }})</td></tr>
+              <tr><th>Pronunciation</th><td>{% widthratio speech.pronunciation_prob 1 100 %}%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Questions in this session</h3>
+        <ol class="question-list">{% for q in session.questions %}<li>{{ q }}</li>{% endfor %}</ol>
+      </div>
+      {% endwith %}
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

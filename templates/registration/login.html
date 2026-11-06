@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Log in{% endblock %}
+{% block content %}
+<section class="auth">
+  <div class="card auth__card">
+    <h1>Welcome back</h1>
+    <p class="muted">Log in to continue practising.</p>
+    {% if form.non_field_errors %}
+      <div class="alert alert--error">Invalid username or password.</div>
+    {% endif %}
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% for field in form %}{% include "includes/field.html" %}{% endfor %}
+      <input type="hidden" name="next" value="{{ next }}" />
+      <button type="submit" class="btn btn--primary btn--block">Log in</button>
+    </form>
+    <p class="muted small center">No account yet? <a href="{% url 'signup' %}">Create one</a></p>
+  </div>
+</section>
+{% endblock %}

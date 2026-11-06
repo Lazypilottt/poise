@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Interview practice with instant feedback{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="container hero__grid">
+    <div>
+      <span class="eyebrow">Mock interviews · Speech analysis · Posture tracking</span>
+      <h1>Walk into your next interview with <span class="accent">poise</span>.</h1>
+      <p class="lead">
+        Answer role-specific questions on camera. Poise analyses how you speak and how you
+        present yourself, then gives you a score and concrete tips to improve - in under a minute.
+      </p>
+      <div class="hero__cta">
+        {% if user.is_authenticated %}
+          <a href="{% url 'setup' %}" class="btn btn--primary btn--lg">Start practising</a>
+          <a href="{% url 'history' %}" class="btn btn--ghost btn--lg">View my sessions</a>
+        {% else %}
+          <a href="{% url 'signup' %}" class="btn btn--primary btn--lg">Start practising - it's free</a>
+          <a href="{% url 'login' %}" class="btn btn--ghost btn--lg">Log in</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="card preview" aria-hidden="true">
+      <div class="preview__head">
+        <div class="ring" style="--value: 82"><span>82</span></div>
+        <div>
+          <div class="muted small">Overall score</div>
+          <div class="preview__grade">Good</div>
+          <div class="muted small">Software Engineering · 5 questions</div>
+        </div>
+      </div>
+      <div class="bars">
+        <div class="bar"><span>Pace</span><div class="bar__track"><div class="bar__fill" style="width:100%"></div></div><b>100</b></div>
+        <div class="bar"><span>Fluency</span><div class="bar__track"><div class="bar__fill" style="width:74%"></div></div><b>74</b></div>
+        <div class="bar"><span>Clarity</span><div class="bar__track"><div class="bar__fill" style="width:88%"></div></div><b>88</b></div>
+        <div class="bar"><span>Expressiveness</span><div class="bar__track"><div class="bar__fill bar__fill--warn" style="width:61%"></div></div><b>61</b></div>
+        <div class="bar"><span>Body language</span><div class="bar__track"><div class="bar__fill" style="width:85%"></div></div><b>85</b></div>
+      </div>
+      <div class="tip tip--improve small">Your tone was fairly flat. Vary your pitch to emphasise key points.</div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2 class="section__title">How it works</h2>
+    <div class="steps">
+      <div class="card step">
+        <span class="step__num">1</span>
+        <h3>Pick your role</h3>
+        <p class="muted">Choose a target role, experience level and your key skills. Poise builds a balanced set of questions for you.</p>
+      </div>
+      <div class="card step">
+        <span class="step__num">2</span>
+        <h3>Answer on camera</h3>
+        <p class="muted">Record your answers in the browser, one question at a time, just like a video interview.</p>
+      </div>
+      <div class="card step">
+        <span class="step__num">3</span>
+        <h3>Get your report</h3>
+        <p class="muted">See scores for pace, fluency, clarity, expressiveness and body language, with tips and your progress over time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--alt">
+  <div class="container">
+    <h2 class="section__title">What Poise measures</h2>
+    <div class="metrics">
+      <div class="metric"><h4>Pace</h4><p class="muted">Syllables per second, compared against a comfortable 130-170 words-per-minute range.</p></div>
+      <div class="metric"><h4>Fluency</h4><p class="muted">Pauses per minute and how much of your answer is actual speech versus silence.</p></div>
+      <div class="metric"><h4>Clarity</h4><p class="muted">A pronunciation score estimated from syllable nuclei and voicing in your audio.</p></div>
+      <div class="metric"><h4>Expressiveness</h4><p class="muted">Pitch variation - catches a flat, monotone delivery as well as an erratic one.</p></div>
+      <div class="metric"><h4>Body language</h4><p class="muted">Pose estimation on your video: slouching, tilted head or shoulders, looking away and framing.</p></div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Interview{% endblock %}
+{% block content %}
+<section class="section section--tight">
+  <div class="container interview">
+    <div class="card question-panel">
+      <div class="question-panel__head">
+        <span class="eyebrow" id="q-counter">Question 1 of {{ practice.questions|length }}</span>
+        <a href="{% url 'setup' %}" class="small">Change role</a>
+      </div>
+      <p class="question" id="q-text">{{ practice.questions.0 }}</p>
+      <div class="dots" id="q-dots">
+        {% for q in practice.questions %}<span class="dot{% if forloop.first %} dot--active{% endif %}"></span>{% endfor %}
+      </div>
+      <div class="question-panel__nav">
+        <button type="button" class="btn btn--ghost btn--sm" id="q-prev" disabled>&larr; Previous</button>
+        <button type="button" class="btn btn--ghost btn--sm" id="q-next">Next question &rarr;</button>
+      </div>
+      <details class="all-questions">
+        <summary>All questions</summary>
+        <ol>{% for q in practice.questions %}<li>{{ q }}</li>{% endfor %}</ol>
+      </details>
+      <div class="tips muted small">
+        <strong>Tips:</strong> look at the camera, keep shoulders level, and use the STAR method
+        (Situation, Task, Action, Result) for behavioural questions.
+      </div>
+    </div>
+
+    <div class="card recorder">
+      <div class="recorder__stage">
+        <video id="preview" autoplay playsinline muted></video>
+        <video id="playback" controls playsinline hidden></video>
+        <div class="recorder__badge" id="rec-badge" hidden><span class="pulse"></span> REC <span id="timer">00:00</span></div>
+        <div class="recorder__message" id="cam-message">Requesting camera and microphone&hellip;</div>
+      </div>
+      <div class="recorder__controls">
+        <button type="button" class="btn btn--primary" id="btn-start" disabled>Start recording</button>
+        <button type="button" class="btn btn--danger" id="btn-stop" hidden>Finish</button>
+        <button type="button" class="btn btn--ghost" id="btn-retake" hidden>Re-record</button>
+        <button type="button" class="btn btn--primary" id="btn-submit" hidden>Analyse my interview</button>
+      </div>
+      <p class="muted small center" id="status">Answer every question in one recording, then press Finish.</p>
+    </div>
+  </div>
+</section>
+
+<div class="overlay" id="overlay" hidden>
+  <div class="overlay__box">
+    <div class="spinner"></div>
+    <h3>Analysing your interview&hellip;</h3>
+    <p class="muted">Measuring your speech and checking your posture. This usually takes 20-60 seconds.</p>
+  </div>
+</div>
+
+{{ practice.questions|json_script:"questions-data" }}
+{% endblock %}
+
+{% block scripts %}
+<script>
+  window.POISE = { submitUrl: "{% url 'submit' %}", csrfToken: "{{ csrf_token }}" };
+</script>
+<script src="{% static 'js/recorder.js' %}"></script>
+{% endblock %}

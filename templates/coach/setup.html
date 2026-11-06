@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}New practice session{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container narrow">
+    <h1>New practice session</h1>
+    <p class="muted">Tell us what you're preparing for and we'll put together a set of questions.</p>
+    <div class="card">
+      <form method="post" class="form-grid" novalidate>
+        {% csrf_token %}
+        {% include "includes/field.html" with field=form.role %}
+        {% include "includes/field.html" with field=form.level %}
+        <div class="span-2">{% include "includes/field.html" with field=form.skills %}</div>
+        {% include "includes/field.html" with field=form.question_count %}
+        <div class="span-2 actions">
+          <button type="submit" class="btn btn--primary">Generate questions &rarr;</button>
+        </div>
+      </form>
+    </div>
+    <div class="card card--subtle">
+      <h3>Before you start</h3>
+      <ul class="checklist">
+        <li>Sit in a quiet room with your face evenly lit.</li>
+        <li>Place the camera at eye level so your head and shoulders are in frame.</li>
+        <li>Allow camera and microphone access when your browser asks.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+{% endblock %}

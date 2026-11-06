@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Contact{% endblock %}
+{% block content %}
+<section class="section section--tight">
+  <div class="container narrow">
+    <h1>Contact us</h1>
+    <p class="muted">Found a bug or have an idea? Send us a message.</p>
+    <div class="card">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {% for field in form %}{% include "includes/field.html" %}{% endfor %}
+        <button type="submit" class="btn btn--primary">Send message</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
