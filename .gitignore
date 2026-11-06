@@ -26,3 +26,6 @@ Fig-1.jpg
 .DS_Store
 .idea/
 .vscode/
+
+# Legacy local data folder (recordings, old model pickles)
+dataset/

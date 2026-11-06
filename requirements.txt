@@ -1,0 +1,10 @@
+# Web app
+Django>=5.0,<5.1
+python-dotenv>=1.0
+whitenoise>=6.6
+gunicorn>=22.0
+
+# Analysis
+praat-parselmouth==0.4.4
+mediapipe==0.10.14
+numpy<2
